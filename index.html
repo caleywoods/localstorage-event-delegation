@@ -40,19 +40,37 @@
   */
   addItems.addEventListener( 'submit', addTapas );
 
-  const makeKey = (input => input.replace(' ', '').toLowerCase());
+  document.addEventListener('DOMContentLoaded', loadItemsFromLocalStorage);
+
+  const makeKey   = (input => input.replace(' ', '-').toLowerCase());
+  const decodeKey = (input => input.replace('-', ' '));
   function addTapas(e) {
     e.preventDefault();
     const name = this.querySelector('[name=item]').value;
-    const item = {taco: false, name: name};
-    
-    console.log('adding');
+    const item = {taco: false, name: name, key: makeKey(name)};
 
     items.push( item );
-    storage.setItem( makeKey(name), item );
+    /*
+      LS only works with strings to we're pushing in JSON
+    */
+    storage.setItem( item.key, JSON.stringify(item) );
 
     // Clear input
     this.querySelector('[name=item]').value = null;
+ 
+    itemsList.innerHTML = htmlBuilder( items ).join('');
+  }
+
+  function loadItemsFromLocalStorage() {
+    for ( let i = 0; i < storage.length; i++ ) {
+      items.push( JSON.parse(storage.getItem(storage.key(i))) );
+    }
+
+    itemsList.innerHTML = htmlBuilder(items).join('');
+  }
+
+  function htmlBuilder(items) {
+    return items.map(tapas => `<li>${tapas.name}</li>`);
   }
 
 </script>
