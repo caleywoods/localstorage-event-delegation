@@ -33,9 +33,9 @@
 
   /*
     Storage API
-    .setItem
-    .getItem
-    .removeItem
+    .setItem(key, val);
+    .getItem(key)
+    .removeItem(key)
   */
   addItems.addEventListener( 'submit', addTapas );
 
@@ -47,7 +47,6 @@
     console.log('adding');
 
     items.push( item );
-    storage.
 
     // Clear input
     this.querySelector('[name=item]').value = null;
