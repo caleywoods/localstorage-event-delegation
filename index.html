@@ -43,7 +43,7 @@
   document.addEventListener('DOMContentLoaded', loadItemsFromLocalStorage);
 
   const makeKey   = (input => input.replace(' ', '-').toLowerCase());
-  const decodeKey = (input => input.replace('-', ' '));
+
   function addTapas(e) {
     e.preventDefault();
     const name = this.querySelector('[name=item]').value;
