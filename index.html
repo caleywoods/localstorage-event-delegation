@@ -29,7 +29,7 @@
   const addItems    = document.querySelector( '.add-items' );
   const itemsList   = document.querySelector( '.plates' ); 
   const storage     = window.localStorage;
-  const items       = [];
+  const items       = JSON.parse( storage.getItem('items')) || [];
 
   /*
     Storage API
@@ -39,16 +39,16 @@
       .clear()
   */
   addItems.addEventListener( 'submit', addTapas );
-
-  document.addEventListener('DOMContentLoaded', loadItemsFromLocalStorage);
+  itemsList.addEventListener( 'click', tacoMeBro );
 
   const makeKey = (input => input.replace(' ', '-').toLowerCase());
 
-  function tacoMeBro() {
-    const item = JSON.parse( storage.getItem(this.id) );
-    item.taco  = item.taco ? false : true;
+  function tacoMeBro(e) {
+    console.log(e);
+    // const item = JSON.parse( storage.getItem(this.id) );
+    // item.taco  = item.taco ? false : true;
 
-    storage.setItem( this.id, JSON.stringify(item) );
+    // storage.setItem( this.id, JSON.stringify(item) );
   }
 
   function addTapas(e) {
@@ -60,39 +60,27 @@
     /*
       LS only works with strings to we're pushing in JSON
     */
-    storage.setItem( item.key, JSON.stringify(item) );
+    storage.setItem( 'items', JSON.stringify(items) );
 
     // Clear input
     this.reset();
  
-    itemsList.innerHTML = htmlBuilder( items ).join('');
-    binder();
-  }
-
-  function binder() {
-    [...document.querySelectorAll('input[type="checkbox"]')].forEach(ele => ele.addEventListener('click', tacoMeBro));
-  }
-
-  function loadItemsFromLocalStorage() {
-    for ( let i = 0; i < storage.length; i++ ) {
-      items.push( JSON.parse(storage.getItem(storage.key(i))) );
-    }
-
-    itemsList.innerHTML = htmlBuilder( items ).join('');
-    binder();
+    htmlBuilder( items );
   }
 
   function htmlBuilder(items) {
-    const html = items.map((tapas, i) => {
-      return `
-      <li data-lskey=${tapas.key}>
-        <input type="checkbox" id="${tapas.key}" ${tapas.taco ? 'checked' : ''}/>
-        <label for="${tapas.key}">${tapas.name}</label>
-      </li>`
-    });
-
-    return html;
+    itemsList.innerHTML = items
+      .map(tapas => {
+        return `
+          <li data-lskey=${tapas.key}>
+            <input type="checkbox" id="${tapas.key}" ${tapas.taco ? 'checked' : ''}/>
+            <label for="${tapas.key}">${tapas.name}</label>
+          </li>`
+        })
+        .join('');
   }
+
+  htmlBuilder( items );
 
 </script>
 
