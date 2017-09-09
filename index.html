@@ -25,16 +25,19 @@
     </form>
   </div>
   <div class="buttons-container">
-    <button>Toggle All</button>
+    <button id="mark-all">Taco All</button>
+    <button id="unmark-all">Taco None</button>
     <a href="" id="clear-list">Clear List</a>
   </div>
 
 <script>
   const addItems     = document.querySelector( '.add-items' );
   const itemsList    = document.querySelector( '.plates' );
-  const clearListBtn = document.querySelector( '#clear-list')
+  const clearListBtn = document.querySelector( '#clear-list');
+  const markAllBtn   = document.querySelector( '#mark-all' );
+  const unmarkAllBtn = document.querySelector( '#unmark-all' );
   const storage      = window.localStorage;
-  const items        = JSON.parse( storage.getItem('items')) || [];
+  let   items        = JSON.parse( storage.getItem('items')) || [];
 
   /*
     Storage API
@@ -46,13 +49,35 @@
   addItems.addEventListener( 'submit', addTapas );
   itemsList.addEventListener( 'click', tacoMeBro );
   clearListBtn.addEventListener( 'click', clearList );
+  markAllBtn.addEventListener( 'click', markAllDone );
+  unmarkAllBtn.addEventListener( 'click', unmarkAllDone );
 
   const makeKey = (input => input.replace(' ', '-').toLowerCase());
 
   function clearList(e) {
     e.preventDefault();
     storage.clear();
-    htmlBuilder([]);
+    htmlBuilder(items = []);
+  }
+
+  function markAllDone() {
+    const toggledItems = items.map(item => {
+      item.taco = true;
+      return item;
+    });
+
+    storage.setItem( 'items', JSON.stringify(toggledItems) );
+    htmlBuilder( toggledItems );
+  }
+
+  function unmarkAllDone() {
+    const toggledItems = items.map(item => {
+      item.taco = false;
+      return item;
+    });
+
+    storage.setItem( 'items', JSON.stringify(toggledItems) );
+    htmlBuilder( toggledItems );
   }
 
   function tacoMeBro(e) {
