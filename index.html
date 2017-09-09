@@ -24,12 +24,17 @@
       <input type="submit" value="+ Add Item">
     </form>
   </div>
+  <div class="buttons-container">
+    <button>Toggle All</button>
+    <a href="" id="clear-list">Clear List</a>
+  </div>
 
 <script>
-  const addItems    = document.querySelector( '.add-items' );
-  const itemsList   = document.querySelector( '.plates' ); 
-  const storage     = window.localStorage;
-  const items       = JSON.parse( storage.getItem('items')) || [];
+  const addItems     = document.querySelector( '.add-items' );
+  const itemsList    = document.querySelector( '.plates' );
+  const clearListBtn = document.querySelector( '#clear-list')
+  const storage      = window.localStorage;
+  const items        = JSON.parse( storage.getItem('items')) || [];
 
   /*
     Storage API
@@ -40,8 +45,15 @@
   */
   addItems.addEventListener( 'submit', addTapas );
   itemsList.addEventListener( 'click', tacoMeBro );
+  clearListBtn.addEventListener( 'click', clearList );
 
   const makeKey = (input => input.replace(' ', '-').toLowerCase());
+
+  function clearList(e) {
+    e.preventDefault();
+    storage.clear();
+    htmlBuilder([]);
+  }
 
   function tacoMeBro(e) {
     /*
