@@ -44,11 +44,15 @@
   const makeKey = (input => input.replace(' ', '-').toLowerCase());
 
   function tacoMeBro(e) {
-    console.log(e);
-    // const item = JSON.parse( storage.getItem(this.id) );
-    // item.taco  = item.taco ? false : true;
+    /*
+      Guard statement to bail on the method if the target isn't the input we want
+    */
+    if (!e.target.matches('input')) return;
 
-    // storage.setItem( this.id, JSON.stringify(item) );
+    const item = items.find( item => item.key === e.target.id);
+    item.taco  = item.taco ? false : true;
+
+    storage.setItem( 'items', JSON.stringify(items) );
   }
 
   function addTapas(e) {
